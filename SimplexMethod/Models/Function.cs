@@ -4,12 +4,12 @@ public class Function
 {
     public double[] Variables;
     public double C;
-    public bool IsExtrMax;
+    public bool IsExtraMax;
 
-    public Function(double[] variables, double c, bool isExtrMax)
+    public Function(double[] variables, double c, bool isExtraMax)
     {
         Variables = variables;
         C = c;
-        IsExtrMax = isExtrMax;
+        IsExtraMax = isExtraMax;
     }
 }

@@ -2,12 +2,12 @@
 
 public class Problem
 {
-    public double[][] ConsMatrx;
+    public double[][] ConsMatrix;
     public string[] Signs;
     public double[] FreeVars;
     public double[] FuncVars;
     public double C;
-    public bool IsExtrMax;
+    public bool IsExtraMax;
 
     public Problem(
         double[][] constraintMatrix,
@@ -15,13 +15,13 @@ public class Problem
         double[] freeVariables,
         double[] functionVariables,
         double c,
-        bool isExtrMax)
+        bool isExtraMax)
     {
-        ConsMatrx = constraintMatrix;
+        ConsMatrix = constraintMatrix;
         Signs = signs;
         FreeVars = freeVariables;
         FuncVars = functionVariables;
         C = c;
-        IsExtrMax = isExtrMax;
+        IsExtraMax = isExtraMax;
     }
 }

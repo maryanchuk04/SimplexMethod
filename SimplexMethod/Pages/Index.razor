@@ -1,9 +1,169 @@
 ﻿@page "/"
+@using SimplexMethod.Models
 
-<PageTitle>Index</PageTitle>
+<div class="d-flex gap-3 mb-2">
+    <h3>Симплекс Метод</h3>
+    @if (_isInitialized)
+    {
+        <button class="btn btn-secondary" @onclick="Clear">Почати з початку</button>
+    }
+</div>
 
-<h1>Hello, world!</h1>
 
-Welcome to your new app.
+@if (!_isInitialized)
+{
+    <div class="d-flex mb-2 gap-2">
+        <div class="form-group">
+            <label for="nOfContraints">Кількість обмежень:</label>
+            <input id="nOfContraints" class="form-control" @bind="_constraintsCount"/>
+        </div>
+        <div class="form-group">
+            <label for="nOfVariables">Кількість змінних:</label>
+            <input id="nOfVariables" class="form-control" @bind="_variablesCount"/>
+        </div>
+    </div>
+    <button class="btn btn-primary" @onclick="Initialize">OK</button>
+}
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+@if (_isInitialized)
+{
+    <h5 class="text-secondary">Введіть функцію</h5>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            @for (var i = 0; i < _variablesCount + 1; i++)
+            {
+                if (i == _variablesCount)
+                {
+                    <th>
+                        C (вільний член)
+                    </th>
+                }
+                else
+                {
+                    <th>
+                        x@(i + 1)
+                    </th>
+                }
+            }
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            @for (var i = 0; i < _variablesCount + 1; i++)
+            {
+                <td>
+
+                    @{
+                        var i1 = i;
+                    }
+                    <input class="form-control" type="number" @bind="function[i1]"/>
+                </td>
+            }
+        </tr>
+        </tbody>
+    </table>
+
+    <h5 class="text-secondary">Введіть обмеження</h5>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            @for (var i = 0; i <= constraints.Length + 1; i++)
+            {
+                if (i == constraints.Length + 1)
+                {
+                    <th>
+                        C (вільний член)
+                    </th>
+                }
+                else if (i == constraints.Length)
+                {
+                    <th>
+                        @signsLabel
+                    </th>
+                }
+                else
+                {
+                    <th>
+                        x@(i + 1)
+                    </th>
+                }
+            }
+        </tr>
+        </thead>
+        <tbody>
+        @for (var i = 0; i < constraints.Length; i++)
+        {
+            <tr>
+                @for (var j = 0; j < constraints[i].Length; j++)
+                {
+                    <td>
+                        @{
+                            var i1 = i;
+                            var j1 = j;
+                        }
+                        @if (i1 == constraints.Length)
+                        {
+                            <select>
+                                <option>>=</option>
+                                <option>==</option>
+                                <option>=<</option>
+                            </select>
+                        }
+                        else
+                        {
+                            <input class="form-control" @bind="constraints[i1][j1]" />
+                        }
+
+                    </td>
+                }
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+
+@code {
+    int _constraintsCount = 3;
+    int _variablesCount = 3;
+    double[][] constraints;
+    double[] function;
+    string _results = "";
+    bool _isInitialized;
+    string signsLabel = "Знаки: >=, ==, <=";
+
+    void Initialize()
+    {
+        constraints = new double[_constraintsCount][];
+        function = new double[_variablesCount + 1];
+        for (var i = 0; i < _constraintsCount; i++)
+        {
+            constraints[i] = new double[_variablesCount + 2];
+        }
+        _isInitialized = true;
+    }
+
+    void InitFunction()
+    {
+        var f = new Function(
+            function.Take(this.function.Length - 1).ToArray(), this.function.Last(), true);
+
+
+    }
+
+    void Proceed()
+    {
+    }
+
+    void Clear()
+    {
+        _constraintsCount = 3;
+        _variablesCount = 3;
+        constraints = null;
+        function = null;
+        _results = "";
+        _isInitialized = false;
+    }
+}
+
